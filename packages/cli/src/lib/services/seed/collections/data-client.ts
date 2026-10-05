@@ -72,7 +72,21 @@ export class SeedDataClient {
    */
   async create<T extends DirectusUnknownType>(data: Partial<T>): Promise<T> {
     const directus = await this.migrationClient.get();
-    return await directus.request<T>(createOne(this.collection, data));
+    const created = await directus.request<T>(createOne(this.collection, data));
+
+    // Since Directus 12.4, file uploads ignore these fields from the payload: set them afterward
+    if (this.collection === 'directus_files') {
+      const overridden = Object.fromEntries(
+        Object.entries(data).filter(([field]) =>
+          ['uploaded_by', 'created_on'].includes(field),
+        ),
+      ) as Partial<T>;
+      if (Object.keys(overridden).length > 0) {
+        return await this.update<T>(created.id as DirectusId, overridden);
+      }
+    }
+
+    return created;
   }
 
   /**

@@ -1,8 +1,10 @@
 import { createApp } from '@directus/api';
+import { startServer as startLicenseServer } from '@directus/mock-license-server';
 import { Subject } from 'rxjs';
 import getenv from 'getenv';
 
 let serverIsRunning = false;
+let licenseServerIsRunning = false;
 
 export async function startServer(): Promise<Subject<void>> {
   // Ensure no more than one server is running
@@ -14,6 +16,13 @@ export async function startServer(): Promise<Subject<void>> {
 
   // Create a subject to terminate the server
   const killer = new Subject<void>();
+
+  // Directus 12 requires a license for some features (e.g. custom permission rules).
+  // The mock license server cannot be stopped, so it is started only once.
+  if (!licenseServerIsRunning) {
+    await startLicenseServer();
+    licenseServerIsRunning = true;
+  }
 
   // Create the Directus server
   const app = await createApp();

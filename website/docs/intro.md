@@ -4,11 +4,19 @@ sidebar_position: 1
 
 # Introduction
 
-![Directus 11.17.1](https://img.shields.io/badge/Directus-11.17.1-64f?style=for-the-badge&logo=directus)
+![Directus 12.4.1](https://img.shields.io/badge/Directus-12.4.1-64f?style=for-the-badge&logo=directus)
 
 :::important
 Latest version of `directus-sync` introduces breaking changes and is not compatible with Directus 10.x.x.
 If you are using Directus 10.x.x, please run `npx directus-sync@2.2.0`
+:::
+
+:::note
+Directus 12 requires a [license](https://directus.com/docs/licensing/overview) for some features.
+For instance, permissions with custom rules (filters, validation, presets or restricted fields) can't be pushed to an
+unlicensed instance, and are hidden when pulling from it (pushing such a dump would then delete them from the target
+instance).
+The license itself (`license_key` and `license_token` settings) is not synchronized.
 :::
 
 :::note

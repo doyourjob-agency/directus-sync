@@ -27,6 +27,12 @@ npm run test
 
 If you have edited the extension or the CLI, you need to rebuild them.
 
+### License
+
+Directus 12 requires a license for some features used by the tests (e.g. custom permission rules).
+The tests start Directus' mock license server (`@directus/mock-license-server`) and activate its unlimited key.
+See the `LICENSE_*` and `NODE_ENV` variables in `.env`.
+
 ### Running a single test
 
 By design, the tests are ran sequentially. This is done to avoid conflicts between Directus servers.

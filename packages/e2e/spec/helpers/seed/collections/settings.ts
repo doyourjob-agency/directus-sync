@@ -97,5 +97,12 @@ export function getSettings(
     ai_anthropic_allowed_models: [faker.lorem.word()],
     ai_google_allowed_models: [faker.lorem.word()],
     collaborative_editing_enabled: faker.datatype.boolean(),
+    ai_translation_default_model: null,
+    ai_translation_glossary: null,
+    ai_translation_style_guide: null,
+    mcp_oauth_enabled: false,
+    mcp_oauth_dcr_enabled: false,
+    mcp_oauth_cimd_enabled: false,
+    default_save_action: 'save-and-quit',
   };
 }

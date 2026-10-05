@@ -11,7 +11,7 @@ import { FoldersIdMapperClient } from '../folders';
 export class SettingsDataMapper extends DataMapper<DirectusSettings> {
   protected fieldsToIgnore: Field<
     DirectusSettings,
-    'public_favicon' | 'project_id'
+    'public_favicon' | 'project_id' | 'license_key' | 'license_token'
   >[] = [
     // These fields are not relevant meanwhile assets are not supported
     'project_logo',
@@ -22,6 +22,9 @@ export class SettingsDataMapper extends DataMapper<DirectusSettings> {
     'project_url',
     // Not relevant for migrations. ID is different for each environment.
     'project_id',
+    // Not relevant for migrations. License is specific to each environment and cannot be changed through the API.
+    'license_key',
+    'license_token',
   ];
   protected idMappers: IdMappers<DirectusSettings, 'public_registration_role'> =
     {

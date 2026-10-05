@@ -1,5 +1,6 @@
 #!/usr/bin/env zx
 import 'dotenv/config';
+import { startDirectus } from './start-directus.mjs';
 import path from 'path';
 import { readdir } from 'fs/promises';
 
@@ -30,10 +31,7 @@ for (const source of sources) {
 
   // Start the Directus server
   console.log(chalk.yellow('---> Starting the server'));
-  let serverProcess = $`npx directus start`;
-  await spinner('Wait for server', () =>
-    retry(20, '1s', () => fetch(`${PUBLIC_URL}/server/health`)),
-  );
+  const stopServer = await startDirectus();
 
   // Push the dump to the server
   console.log(chalk.yellow('---> Pushing the dump to the instance'));
@@ -48,10 +46,8 @@ for (const source of sources) {
     'Pulling the configuration',
     () => $`npx directus-sync ${cliProgramArgs} pull ${cliCommandArgs}`,
   );
-  serverProcess.kill('SIGINT');
-  await serverProcess.catch(() =>
-    console.log(chalk.yellow('---> Server stopped')),
-  );
+  await stopServer();
+  console.log(chalk.yellow('---> Server stopped'));
 
   console.log(chalk.green(`===> ${source} updated successfully`));
 }

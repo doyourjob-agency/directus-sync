@@ -1,5 +1,6 @@
 #!/usr/bin/env zx
 import 'dotenv/config';
+import { startDirectus } from './start-directus.mjs';
 import path from 'path';
 import { readdir } from 'fs/promises';
 import { readFileSync, writeFileSync } from 'fs';
@@ -11,8 +12,8 @@ async function writeJSON(path, data) {
   await writeFileSync(path, JSON.stringify(data, null, 2));
 }
 
-const actual = '11.17.1';
-const next = '11.17.1';
+const actual = '12.4.1';
+const next = '12.4.1';
 
 if (actual === next) {
   console.log('Nothing to upgrade');
@@ -64,7 +65,9 @@ for (const source of sources) {
 
   // Install the current version
   console.log(chalk.yellow('---> Installing the current version'));
-  await $`npm install --save --save-exact directus@${actual}`;
+  // Uninstall first: directus and @directus/api depend on each other, so npm keeps the installed version otherwise
+  await $`npm uninstall directus`;
+  await $`npm install --save-dev --save-exact directus@${actual}`;
 
   // Bootstrap the Directus database
   console.log(chalk.yellow('---> Bootstrapping the database'));
@@ -72,10 +75,7 @@ for (const source of sources) {
 
   // Start the Directus server
   console.log(chalk.yellow('---> Starting the server'));
-  let serverProcess = $`npx directus start`;
-  await spinner('Wait for server', () =>
-    retry(20, '1s', () => fetch(`${PUBLIC_URL}/server/health`)),
-  );
+  let stopServer = await startDirectus();
 
   // Push the dump to the server
   console.log(chalk.yellow('---> Pushing the dump to the instance'));
@@ -84,14 +84,14 @@ for (const source of sources) {
     () =>
       $`npx directus-sync@${version} ${cliProgramArgs} push ${cliCommandArgs}`, // Use current version of directus-sync
   );
-  serverProcess.kill('SIGINT');
-  await serverProcess.catch(() =>
-    console.log(chalk.yellow('---> Server stopped')),
-  );
+  await stopServer();
+  console.log(chalk.yellow('---> Server stopped'));
 
   // Install the next version
   console.log(chalk.yellow('---> Installing the next version'));
-  await $`npm install --save --save-exact directus@${next}`;
+  // Uninstall first: directus and @directus/api depend on each other, so npm keeps the installed version otherwise
+  await $`npm uninstall directus`;
+  await $`npm install --save-dev --save-exact directus@${next}`;
 
   // Apply the latest migrations
   console.log(chalk.yellow('---> Apply latest migrations'));
@@ -99,10 +99,7 @@ for (const source of sources) {
 
   // Start the Directus server and run the migrations
   console.log(chalk.yellow('---> Starting the new server'));
-  serverProcess = $`npx directus start`;
-  await spinner('Wait for server', () =>
-    retry(20, '1s', () => fetch(`${PUBLIC_URL}/server/health`)),
-  );
+  stopServer = await startDirectus();
 
   // Pull the dump from the server
   console.log(chalk.yellow('---> Pulling the dump from the instance'));
@@ -110,10 +107,8 @@ for (const source of sources) {
     'Pulling the configuration',
     () => $`npx directus-sync ${cliProgramArgs} pull ${cliCommandArgs}`, // Use next version of directus-sync
   );
-  serverProcess.kill('SIGINT');
-  await serverProcess.catch(() =>
-    console.log(chalk.yellow('---> Server stopped')),
-  );
+  await stopServer();
+  console.log(chalk.yellow('---> Server stopped'));
 
   console.log(chalk.green(`===> ${source} upgraded successfully`));
 }

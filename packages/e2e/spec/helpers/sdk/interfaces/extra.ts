@@ -45,4 +45,11 @@ export interface DirectusSettingsExtra {
   ai_anthropic_allowed_models: string[] | null;
   ai_google_allowed_models: string[] | null;
   collaborative_editing_enabled: boolean;
+  ai_translation_default_model: string | null;
+  ai_translation_glossary: Record<string, unknown>[] | null;
+  ai_translation_style_guide: string | null;
+  mcp_oauth_enabled: boolean;
+  mcp_oauth_dcr_enabled: boolean;
+  mcp_oauth_cimd_enabled: boolean;
+  default_save_action: string;
 }
