@@ -79,6 +79,7 @@ export const pullBasic = (context: Context) => {
         options: flow.options,
         operation: (await directus.getByLocalId('operations', operation.id))
           .sync_id,
+        folder: null,
       },
     ]);
     expect(collections.folders).toEqual([
@@ -86,6 +87,7 @@ export const pullBasic = (context: Context) => {
         _syncId: (await directus.getByLocalId('folders', folder.id)).sync_id,
         name: folder.name,
         parent: folder.parent,
+        type: 'files',
       },
     ]);
     expect(collections.operations).toEqual([
@@ -239,6 +241,13 @@ export const pullBasic = (context: Context) => {
         ai_anthropic_allowed_models: settings.ai_anthropic_allowed_models,
         ai_google_allowed_models: settings.ai_google_allowed_models,
         collaborative_editing_enabled: settings.collaborative_editing_enabled,
+        ai_translation_default_model: settings.ai_translation_default_model,
+        ai_translation_glossary: settings.ai_translation_glossary,
+        ai_translation_style_guide: settings.ai_translation_style_guide,
+        mcp_oauth_enabled: settings.mcp_oauth_enabled,
+        mcp_oauth_dcr_enabled: settings.mcp_oauth_dcr_enabled,
+        mcp_oauth_cimd_enabled: settings.mcp_oauth_cimd_enabled,
+        default_save_action: settings.default_save_action,
       },
     ]);
     expect(collections.translations).toEqual([

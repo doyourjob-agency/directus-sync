@@ -47,8 +47,8 @@
     "ai_openai_compatible_name": null,
     "ai_openai_compatible_models": null,
     "ai_openai_compatible_headers": null,
-    "ai_openai_allowed_models": ["gpt-5-nano", "gpt-5-mini", "gpt-5"],
-    "ai_anthropic_allowed_models": ["claude-haiku-4-5", "claude-sonnet-4-5"],
+    "ai_openai_allowed_models": ["gpt-5.4-nano", "gpt-5.4-mini", "gpt-5.4"],
+    "ai_anthropic_allowed_models": ["claude-haiku-4-5", "claude-sonnet-4-6"],
     "ai_google_allowed_models": [
       "gemini-3-pro-preview",
       "gemini-3-flash-preview",
@@ -56,6 +56,13 @@
       "gemini-2.5-flash"
     ],
     "collaborative_editing_enabled": false,
+    "ai_translation_default_model": null,
+    "ai_translation_glossary": null,
+    "ai_translation_style_guide": null,
+    "mcp_oauth_enabled": false,
+    "mcp_oauth_dcr_enabled": false,
+    "mcp_oauth_cimd_enabled": false,
+    "default_save_action": "save-and-quit",
     "_syncId": "_sync_default_settings"
   }
 ]

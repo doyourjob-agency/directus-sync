@@ -21,6 +21,7 @@
   },
   "license": "GPL-3.0",
   "devDependencies": {
+    "@directus/types": "17.0.0",
     "@types/deep-diff": "^1.0.5",
     "@types/fs-extra": "^11.0.4",
     "@types/http-errors": "^2.0.4",
